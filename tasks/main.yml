@@ -1,31 +1,9 @@
 ---
 
-- name: Populate and update the package index files
-  raw: apt-get update
-  when: bootstrap_raw is defined and bootstrap_raw
-
-- name: Install minimal Python support for Ansible
-  raw: apt-get --no-install-recommends -yq install python python-apt libcap2-bin
-  when: bootstrap_raw is defined and bootstrap_raw
-
-- name: Install custom Ansible local facts
-  copy:
-    src: 'etc/ansible/facts.d/'
-    dest: '/etc/ansible/facts.d/'
-    owner: 'root'
-    group: 'root'
-    mode: '0755'
-
-- name: Gather host facts
-  action: setup
-
 - name: Make sure essential software is installed
-  apt:
+  yum:
     name: '{{ item }}'
     state: 'present'
-    update_cache: True
-    cache_valid_time: '3600'
-    install_recommends: False
   with_flattened:
     - bootstrap_base_packages
     - bootstrap_packages
@@ -170,18 +148,11 @@
 - name: Enforce new hostname
   hostname:
     name: '{{ bootstrap_hostname }}'
-  when: (ansible_local|d() and ansible_local.cap12s|d() and (not ansible_local.cap12s.enabled or
-         (ansible_local.cap12s.enabled and 'cap_sys_admin' in ansible_local.cap12s.list)))
 
-- name: Save hostname in /etc/hostname
-  copy:
-    content: '{{ bootstrap_hostname + "\n" }}'
-    dest: '/etc/hostname'
-    owner: 'root'
-    group: 'root'
-    mode: '0644'
-  when: (ansible_local|d() and ansible_local.cap12s|d() and (not ansible_local.cap12s.enabled or
-         (ansible_local.cap12s.enabled and 'cap_sys_admin' in ansible_local.cap12s.list)))
+- name: Save hostname in /etc/sysconfig/network
+  lineinfile:
+    dest: '/etc/sysconfig/network'
+    line: 'HOSTNAME={{ bootstrap_hostname }}'
 
 - name: Save hostname and domain in /etc/hosts
   lineinfile:

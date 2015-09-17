@@ -34,7 +34,7 @@ bootstrap_raw: True
 # .. envvar:: bootstrap_base_packages
 #
 # Base packages installed during bootstrap.
-bootstrap_base_packages: [ 'python', 'python-apt', 'python-pip', 'sudo', 'lsb-release' ]
+bootstrap_base_packages: []
 
 
 # .. envvar:: bootstrap_packages
@@ -110,7 +110,7 @@ bootstrap_admin_shell: '/bin/bash'
 # .. envvar:: bootstrap_admin_sshkeys
 #
 # List of SSH keys configured on root and administrator accounts.
-bootstrap_admin_sshkeys: [ '{{ lookup("pipe","ssh-add -L | grep ^ssh || cat ~/.ssh/id_rsa.pub || true") }}' ]
+bootstrap_admin_sshkeys: [ '{{ lookup("pipe","ssh-add -L 2>/dev/null | grep ^ssh || cat ~/.ssh/id_rsa.pub || true") }}' ]
 
 # .. envvar:: bootstrap_admin_manage_existing
 #
