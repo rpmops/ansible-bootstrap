@@ -21,6 +21,14 @@ bootstrap_domain: ''
 bootstrap_hostname: '{{ inventory_hostname_short | default(inventory_hostname) }}'
 
 
+# .. envvar:: bootstrap_hostname_v6_loopback
+#
+# Set custom DNS hostname on a given host also for IPv6.
+# This is only needed when you don't have properly working DNS and still need
+# to resolve the hostname as IPv6 address.
+bootstrap_hostname_v6_loopback: False
+
+
 # --------------------
 #   APT and packages
 # --------------------
@@ -127,7 +135,7 @@ bootstrap_admin_manage_existing: False
 
 # .. envvar:: bootstrap_sudo
 #
-# Configure paswordless ``sudo`` access for selected accounts.
+# Configure paswwordless ``sudo`` access for selected accounts.
 bootstrap_sudo: True
 
 
